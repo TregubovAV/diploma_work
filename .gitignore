@@ -38,7 +38,7 @@ out/
 *.zip
 *.tar.gz
 *.rar
-!artifacts/app-ibank-build-for-testers.jar
+!artifacts/app-replan-delivery.jar
 
 ### Exclusions ###
 !gradle/wrapper/gradle-wrapper.jar

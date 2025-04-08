@@ -23,6 +23,7 @@ dependencies {
     testImplementation 'com.codeborne:selenide:6.17.2'
     testCompileOnly 'org.projectlombok:lombok:1.18.28'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+    testImplementation 'com.github.javafaker:javafaker:1.0.2'
 }
 
 test {
