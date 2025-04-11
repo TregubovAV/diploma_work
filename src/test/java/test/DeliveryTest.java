@@ -1,7 +1,6 @@
 package test;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Configuration;
 import data.DataGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ public class DeliveryTest {
 
     @BeforeEach
     void setup() {
-        Configuration.headless = false;
         open("http://localhost:9999");
     }
 
@@ -44,9 +42,6 @@ public class DeliveryTest {
                 .shouldHave(Condition.text("Встреча успешно запланирована на " + firstMeetingDate), Duration.ofSeconds(15));
         $("[data-test-id=success-notification] button").click();
 
-        // Ожидание, чтобы UI успел отрисоваться
-        sleep(2000); // ожидание, чтобы UI успел отрисоваться
-
         // Вторая дата
         $("[data-test-id=date] input").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[data-test-id=date] input").setValue(secondMeetingDate);
@@ -56,5 +51,8 @@ public class DeliveryTest {
         $("[data-test-id=replan-notification]")
                 .shouldHave(Condition.text("Необходимо подтверждение"), Duration.ofSeconds(15));
         $$("button").find(Condition.exactText("Перепланировать")).click();
+
+        $("[data-test-id=success-notification]")
+                .shouldHave(Condition.text("Встреча успешно запланирована на " + secondMeetingDate), Duration.ofSeconds(15));
     }
 }

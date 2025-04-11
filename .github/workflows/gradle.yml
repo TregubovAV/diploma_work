@@ -21,21 +21,7 @@ jobs:
 
       # 2) Запускаем SUT в фоне
       - name: Start SUT
-        run: java -jar ./artifacts/app-ibank-build-for-testers.jar &
-
-      # 3) Ждём, пока SUT реально поднимется (на порту 9999).
-      #    Если у вас нет nc (netcat), замените на sleep 15 или sleep 20
-      - name: Wait for SUT
-        run: |
-          echo "Waiting for SUT to start..."
-          for i in {1..10}; do
-            if nc -z localhost 9999; then
-              echo "SUT is up!"
-              break
-            fi
-            echo "Still waiting..."
-            sleep 3
-          done
+        run: java -jar ./artifacts/app-replan-delivery.jar &
 
       # 4) Запускаем тесты в headless-режиме
       - name: Build with Gradle
