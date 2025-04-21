@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'io.qameta.allure' version '2.11.2'
 }
 
 group 'ru.netology'
@@ -24,10 +25,18 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.28'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
     testImplementation 'com.github.javafaker:javafaker:1.0.2'
+    testImplementation 'io.qameta.allure:allure-selenide:2.24.0'
 }
 
 test {
     useJUnitPlatform()
     systemProperty 'selenide.headless', System.getProperty('selenide.headless')
     systemProperty 'chromeoptions.prefs', System.getProperty('chromeoptions.prefs', "profile.password_manager_leak_detection=false")
+    systemProperty 'allure.results.directory', 'build/allure-results'
+}
+
+allure {
+    version = '2.24.0'
+    autoconfigure = true
+    aspectjweaver = true
 }

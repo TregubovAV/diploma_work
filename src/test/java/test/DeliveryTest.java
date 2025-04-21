@@ -10,10 +10,14 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.*;
 import org.openqa.selenium.Keys;
 
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+
 public class DeliveryTest {
 
     @BeforeEach
     void setup() {
+        SelenideLogger.addListener("allure", new AllureSelenide().screenshots(true).savePageSource(true));
         open("http://localhost:9999");
     }
 
