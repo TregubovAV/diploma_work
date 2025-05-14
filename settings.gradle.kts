@@ -11,4 +11,3 @@ plugins {
 }
 
 rootProject.name = "Homework.2.4"
-

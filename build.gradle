@@ -26,6 +26,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
     testImplementation 'com.github.javafaker:javafaker:1.0.2'
     testImplementation 'io.qameta.allure:allure-selenide:2.24.0'
+    testImplementation 'commons-dbutils:commons-dbutils:1.7'
 }
 
 test {

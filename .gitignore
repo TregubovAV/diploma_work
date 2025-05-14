@@ -38,7 +38,7 @@ out/
 *.zip
 *.tar.gz
 *.rar
-!artifacts/app-replan-delivery.jar
+!artifacts/aqa-shop.jar
 
 ### Exclusions ###
 !gradle/wrapper/gradle-wrapper.jar
