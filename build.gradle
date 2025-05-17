@@ -8,7 +8,7 @@ version '1.0-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(11)
     }
 }
 
@@ -27,6 +27,8 @@ dependencies {
     testImplementation 'com.github.javafaker:javafaker:1.0.2'
     testImplementation 'io.qameta.allure:allure-selenide:2.24.0'
     testImplementation 'commons-dbutils:commons-dbutils:1.7'
+    testImplementation 'mysql:mysql-connector-java:8.0.33'
+    testImplementation 'org.postgresql:postgresql:42.7.3'
 }
 
 test {
@@ -38,6 +40,4 @@ test {
 
 allure {
     version = '2.24.0'
-    autoconfigure = true
-    aspectjweaver = true
 }
