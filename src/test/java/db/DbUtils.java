@@ -9,12 +9,12 @@ import java.sql.DriverManager;
 
 public class DbUtils {
 
-    private DbUtils() {}
-
-    // Получаем параметры из systemProperty, с дефолтами
     private static final String DB_URL = System.getProperty("db.url", "jdbc:mysql://localhost:3306/app");
     private static final String DB_USER = System.getProperty("db.user", "app");
     private static final String DB_PASSWORD = System.getProperty("db.password", "pass");
+
+    private DbUtils() {
+    }
 
     @SneakyThrows
     public static void clearTables() {
@@ -30,7 +30,9 @@ public class DbUtils {
     public static String getPaymentStatus() {
         QueryRunner runner = new QueryRunner();
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            return runner.query(conn, "SELECT status FROM payment_entity ORDER BY created DESC LIMIT 1;", new ScalarHandler<>());
+            return runner.query(conn,
+                "SELECT status FROM payment_entity ORDER BY created DESC LIMIT 1;",
+                new ScalarHandler<>());
         }
     }
 
@@ -38,7 +40,41 @@ public class DbUtils {
     public static String getCreditStatus() {
         QueryRunner runner = new QueryRunner();
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            return runner.query(conn, "SELECT status FROM credit_request_entity ORDER BY created DESC LIMIT 1;", new ScalarHandler<>());
+            return runner.query(conn,
+                "SELECT status FROM credit_request_entity ORDER BY created DESC LIMIT 1;",
+                new ScalarHandler<>());
+        }
+    }
+
+    @SneakyThrows
+    public static int getOrderCount() {
+        QueryRunner runner = new QueryRunner();
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            return runner.query(conn,
+                "SELECT COUNT(*) FROM order_entity;",
+                new ScalarHandler<>());
+        }
+    }
+
+    @SneakyThrows
+    public static boolean isOrderLinkedToPayment() {
+        QueryRunner runner = new QueryRunner();
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            Long count = runner.query(conn,
+                "SELECT COUNT(*) FROM order_entity WHERE payment_id IS NOT NULL;",
+                new ScalarHandler<>());
+            return count != null && count > 0;
+        }
+    }
+
+    @SneakyThrows
+    public static boolean isOrderLinkedToCredit() {
+        QueryRunner runner = new QueryRunner();
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            Long count = runner.query(conn,
+                "SELECT COUNT(*) FROM order_entity WHERE credit_id IS NOT NULL;",
+                new ScalarHandler<>());
+            return count != null && count > 0;
         }
     }
 }

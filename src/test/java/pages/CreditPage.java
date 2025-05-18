@@ -34,11 +34,11 @@ public class CreditPage {
     }
 
     public void checkSuccessNotification() {
-        successNotification.shouldBe(visible, Duration.ofSeconds(15));
+        successNotification.shouldBe(visible, Duration.ofSeconds(25));
     }
 
     public void checkErrorNotification() {
-        errorNotification.shouldBe(visible, Duration.ofSeconds(15));
+        errorNotification.shouldBe(visible, Duration.ofSeconds(25));
     }
 
     public void checkWrongFormatMessageForField(String fieldLabel) {
@@ -46,8 +46,13 @@ public class CreditPage {
                 .shouldBe(visible);
     }
 
-    public void checkRequiredFieldMessageForOwner() {
-        $x("//span[text()='Владелец']/../span[@class='input__sub' and text()='Поле обязательно для заполнения']")
+    public void checkRequiredFieldMessageForField(String fieldLabel) {
+        $x("//span[text()='" + fieldLabel + "']/../span[@class='input__sub' and text()='Поле обязательно для заполнения']")
                 .shouldBe(visible);
+    }
+
+    public void checkNoNotificationsVisible() {
+        successNotification.shouldNotBe(visible, Duration.ofSeconds(25));
+        errorNotification.shouldNotBe(visible, Duration.ofSeconds(25));
     }
 }

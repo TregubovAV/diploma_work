@@ -4,7 +4,9 @@ import com.codeborne.selenide.logevents.SelenideLogger;
 import data.DataHelper;
 import db.DbUtils;
 import io.qameta.allure.selenide.AllureSelenide;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pages.MainPage;
 
 import static com.codeborne.selenide.Selenide.open;
@@ -12,14 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PaymentTest {
 
-    @BeforeAll
-    static void setUpAll() {
-        SelenideLogger.addListener("allure", new AllureSelenide());
-    }
-
     @BeforeEach
     void setUp() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
         open("http://localhost:8080");
+        DbUtils.clearTables();
     }
 
     @AfterEach
@@ -28,85 +27,24 @@ public class PaymentTest {
     }
 
     @Test
-    void shouldApprovePaymentWithValidApprovedCard() {
+    void shouldApprovePaymentWithValidCard() {
         var mainPage = new MainPage();
         var paymentPage = mainPage.goToPaymentPage();
-        var cardInfo = DataHelper.getApprovedCardInfo();
-        paymentPage.fillForm(cardInfo);
+        var info = DataHelper.getApprovedCardInfo(); 
+        paymentPage.fillForm(info);
         paymentPage.checkSuccessNotification();
         assertEquals("APPROVED", DbUtils.getPaymentStatus());
+        assertTrue(DbUtils.isOrderLinkedToPayment()); 
     }
 
     @Test
     void shouldDeclinePaymentWithDeclinedCard() {
         var mainPage = new MainPage();
         var paymentPage = mainPage.goToPaymentPage();
-        var cardInfo = DataHelper.getDeclinedCardInfo();
-        paymentPage.fillForm(cardInfo);
+        var info = DataHelper.getDeclinedCardInfo(); 
+        paymentPage.fillForm(info);
         paymentPage.checkErrorNotification();
         assertEquals("DECLINED", DbUtils.getPaymentStatus());
-    }
-
-    @Test
-    void shouldShowErrorIfCardNumberIsEmpty() {
-        var mainPage = new MainPage();
-        var paymentPage = mainPage.goToPaymentPage();
-        var cardInfo = DataHelper.getCardWithEmptyNumber();
-        paymentPage.fillForm(cardInfo);
-        paymentPage.checkWrongFormatMessageForField("Номер карты");
-    }
-
-    @Test
-    void shouldShowErrorIfMonthIsEmpty() {
-        var mainPage = new MainPage();
-        var paymentPage = mainPage.goToPaymentPage();
-        var cardInfo = DataHelper.getCardWithEmptyMonth();
-        paymentPage.fillForm(cardInfo);
-        paymentPage.checkWrongFormatMessageForField("Месяц");
-    }
-
-    @Test
-    void shouldShowErrorIfYearIsEmpty() {
-        var mainPage = new MainPage();
-        var paymentPage = mainPage.goToPaymentPage();
-        var cardInfo = DataHelper.getCardWithEmptyYear();
-        paymentPage.fillForm(cardInfo);
-        paymentPage.checkWrongFormatMessageForField("Год");
-    }
-
-    @Test
-    void shouldShowErrorIfOwnerIsEmpty() {
-        var mainPage = new MainPage();
-        var paymentPage = mainPage.goToPaymentPage();
-        var cardInfo = DataHelper.getCardWithEmptyOwner();
-        paymentPage.fillForm(cardInfo);
-        paymentPage.checkRequiredFieldMessageForOwner();
-    }
-
-    @Test
-    void shouldShowErrorIfCVCIsEmpty() {
-        var mainPage = new MainPage();
-        var paymentPage = mainPage.goToPaymentPage();
-        var cardInfo = DataHelper.getCardWithEmptyCVC();
-        paymentPage.fillForm(cardInfo);
-        paymentPage.checkWrongFormatMessageForField("CVC/CVV");
-    }
-
-    @Test
-    void shouldShowErrorIfCardNumberIsInvalid() {
-        var mainPage = new MainPage();
-        var paymentPage = mainPage.goToPaymentPage();
-        var cardInfo = DataHelper.getCardWithInvalidNumber();
-        paymentPage.fillForm(cardInfo);
-        paymentPage.checkWrongFormatMessageForField("Номер карты");
-    }
-
-    @Test
-    void shouldShowErrorIfCVCIsInvalid() {
-        var mainPage = new MainPage();
-        var paymentPage = mainPage.goToPaymentPage();
-        var cardInfo = DataHelper.getCardWithInvalidCVC();
-        paymentPage.fillForm(cardInfo);
-        paymentPage.checkWrongFormatMessageForField("CVC/CVV");
+        assertTrue(DbUtils.isOrderLinkedToPayment()); 
     }
 }

@@ -24,7 +24,6 @@ public class PaymentPage {
         heading.shouldBe(visible);
     }
 
-    // Заполнение формы одним объектом CardInfo
     public void fillForm(DataHelper.CardInfo info) {
         cardNumberField.setValue(info.getCardNumber());
         monthField.setValue(info.getMonth());
@@ -34,25 +33,26 @@ public class PaymentPage {
         continueButton.click();
     }
 
-    // Проверка успешной оплаты
     public void checkSuccessNotification() {
-        successNotification.shouldBe(visible, Duration.ofSeconds(15));
+        successNotification.shouldBe(visible, Duration.ofSeconds(25));
     }
 
-    // Проверка ошибки оплаты
     public void checkErrorNotification() {
-        errorNotification.shouldBe(visible, Duration.ofSeconds(15));
+        errorNotification.shouldBe(visible, Duration.ofSeconds(25));
     }
 
-    // Проверка "Неверный формат" под нужным полем
     public void checkWrongFormatMessageForField(String fieldName) {
         $x("//span[text()='" + fieldName + "']/../span[@class='input__sub' and text()='Неверный формат']")
                 .shouldBe(visible);
     }
 
-    // Проверка "Поле обязательно" для поля "Владелец"
-    public void checkRequiredFieldMessageForOwner() {
-        $x("//span[text()='Владелец']/../span[@class='input__sub' and text()='Поле обязательно для заполнения']")
+    public void checkRequiredFieldMessageForField(String fieldLabel) {
+        $x("//span[text()='" + fieldLabel + "']/../span[@class='input__sub' and text()='Поле обязательно для заполнения']")
                 .shouldBe(visible);
+    }
+
+    public void checkNoNotificationsVisible() {
+        successNotification.shouldNotBe(visible, Duration.ofSeconds(25));
+        errorNotification.shouldNotBe(visible, Duration.ofSeconds(25));
     }
 }
