@@ -57,23 +57,13 @@ docker-compose up --build
 #### ✅ Для MySQL:
 
 ```bash
-java -Dspring.datasource.url=jdbc:mysql://localhost:3306/app \
-     -Dspring.datasource.username=app \
-     -Dspring.datasource.password=pass \
-     -Dspring.credit-gate.url=http://localhost:9999/credit \
-     -Dspring.payment-gate.url=http://localhost:9999/payment \
-     -jar artifacts/aqa-shop.jar
+java "-Dspring.datasource.url=jdbc:mysql://localhost:3306/app" -jar artifacts/aqa-shop.jar
 ```
 
 #### ✅ Для PostgreSQL:
 
 ```bash
-java -Dspring.datasource.url=jdbc:postgresql://localhost:5432/app \
-     -Dspring.datasource.username=app \
-     -Dspring.datasource.password=pass \
-     -Dspring.credit-gate.url=http://localhost:9999/credit \
-     -Dspring.payment-gate.url=http://localhost:9999/payment \
-     -jar artifacts/aqa-shop.jar
+java "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" -jar artifacts/aqa-shop.jar
 ```
 
 Приложение будет доступно по адресу:  
@@ -86,13 +76,13 @@ java -Dspring.datasource.url=jdbc:postgresql://localhost:5432/app \
 #### ▶ Прогон тестов с MySQL:
 
 ```bash
-./gradlew clean test -DdbType=mysql 
+./gradlew clean test "-Ddb.url=jdbc:mysql://localhost:3306/app"
 ```
 
 #### ▶ Прогон тестов с PostgreSQL:
 
 ```bash
-./gradlew clean test -DdbType=postgresql 
+./gradlew clean test "-Ddb.url=jdbc:postgresql://localhost:5432/app"
 ```
 
 ---
