@@ -4,10 +4,7 @@ import com.codeborne.selenide.logevents.SelenideLogger;
 import data.DataHelper;
 import db.DbUtils;
 import io.qameta.allure.selenide.AllureSelenide;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import pages.MainPage;
 
 import static com.codeborne.selenide.Selenide.open;
@@ -16,16 +13,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreditTest {
 
-    @BeforeEach
-    void setup() {
-        open("http://localhost:8080");
+    @BeforeAll
+    static void setupAll() {
         SelenideLogger.addListener("allure", new AllureSelenide());
-        DbUtils.clearTables();
     }
 
     @AfterAll
-    static void tearDown() {
+    static void tearDownAll() {
         SelenideLogger.removeListener("allure");
+    }
+
+    @BeforeEach
+    void setup() {
+        open("http://localhost:8080");
+        DbUtils.clearTables();
     }
 
     @Test
@@ -54,5 +55,88 @@ public class CreditTest {
         var creditStatus = DbUtils.getCreditStatus();
         assertEquals("DECLINED", creditStatus);
         assertTrue(DbUtils.isOrderLinkedToCredit());
+    }
+
+
+    @Test
+    @DisplayName("Пустое поле 'Номер карты' — заявка на кредит")
+    void shouldShowValidationErrorsForEmptyCardNumberCredit() {
+        var mainPage = new MainPage();
+        var creditPage = mainPage.goToCreditPage();
+        var info = DataHelper.getEmptyCardNumberInfo();
+        creditPage.fillForm(info);
+
+        creditPage.checkWrongFormatMessageForField("Номер карты");
+        creditPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
+    }
+
+    @Test
+    @DisplayName("Пустое поле 'Месяц' — заявка на кредит")
+    void shouldShowValidationErrorsForEmptyMonthCredit() {
+        var mainPage = new MainPage();
+        var creditPage = mainPage.goToCreditPage();
+        var info = DataHelper.getEmptyMonthInfo();
+        creditPage.fillForm(info);
+
+        creditPage.checkWrongFormatMessageForField("Месяц");
+        creditPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
+    }
+
+    @Test
+    @DisplayName("Пустое поле 'Год' — заявка на кредит")
+    void shouldShowValidationErrorsForEmptyYearCredit() {
+        var mainPage = new MainPage();
+        var creditPage = mainPage.goToCreditPage();
+        var info = DataHelper.getEmptyYearInfo();
+        creditPage.fillForm(info);
+
+        creditPage.checkWrongFormatMessageForField("Год");
+        creditPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
+    }
+
+    @Test
+    @DisplayName("Пустое поле 'Владелец' — заявка на кредит")
+    void shouldShowValidationErrorsForEmptyHolderCredit() {
+        var mainPage = new MainPage();
+        var creditPage = mainPage.goToCreditPage();
+        var info = DataHelper.getEmptyHolderInfo();
+        creditPage.fillForm(info);
+
+        creditPage.checkRequiredFieldMessageForField("Владелец");
+        creditPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
+    }
+
+    @Test
+    @DisplayName("Пустое поле 'CVC/CVV' — заявка на кредит")
+    void shouldShowValidationErrorsForEmptyCvcCredit() {
+        var mainPage = new MainPage();
+        var creditPage = mainPage.goToCreditPage();
+        var info = DataHelper.getEmptyCvcInfo();
+        creditPage.fillForm(info);
+
+        creditPage.checkWrongFormatMessageForField("CVC/CVV");
+        creditPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
+    }
+
+    @Test
+    @DisplayName("Все поля пустые — заявка на кредит")
+    void shouldShowValidationErrorsForEmptyFormCredit() {
+        var mainPage = new MainPage();
+        var creditPage = mainPage.goToCreditPage();
+        var info = DataHelper.getEmptyFormInfo();
+        creditPage.fillForm(info);
+
+        creditPage.checkWrongFormatMessageForField("Номер карты");
+        creditPage.checkWrongFormatMessageForField("Месяц");
+        creditPage.checkWrongFormatMessageForField("Год");
+        creditPage.checkRequiredFieldMessageForField("Владелец");
+        creditPage.checkWrongFormatMessageForField("CVC/CVV");
+        creditPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
     }
 }

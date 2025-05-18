@@ -4,7 +4,7 @@ import com.codeborne.selenide.SelenideElement;
 import data.DataHelper;
 import java.time.Duration;
 
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class PaymentPage {
@@ -19,6 +19,8 @@ public class PaymentPage {
 
     private final SelenideElement successNotification = $x("//div[contains(@class,'notification_status_ok')]");
     private final SelenideElement errorNotification = $x("//div[contains(@class,'notification_status_error')]");
+    private final SelenideElement successText = successNotification.$x(".//div[@class='notification__content']");
+    private final SelenideElement errorText = errorNotification.$x(".//div[@class='notification__content']");
 
     public PaymentPage() {
         heading.shouldBe(visible);
@@ -35,20 +37,22 @@ public class PaymentPage {
 
     public void checkSuccessNotification() {
         successNotification.shouldBe(visible, Duration.ofSeconds(25));
+        successText.shouldHave(text("Операция одобрена Банком."), Duration.ofSeconds(25));
     }
 
     public void checkErrorNotification() {
         errorNotification.shouldBe(visible, Duration.ofSeconds(25));
+        errorText.shouldHave(text("Ошибка! Банк отказал в проведении операции."), Duration.ofSeconds(25));
     }
 
-    public void checkWrongFormatMessageForField(String fieldName) {
-        $x("//span[text()='" + fieldName + "']/../span[@class='input__sub' and text()='Неверный формат']")
-                .shouldBe(visible);
+    public void checkWrongFormatMessageForField(String fieldLabel) {
+        $x("//span[contains(@class, 'input__inner')][.//span[@class='input__top' and text()='" + fieldLabel + "']]//span[contains(@class, 'input__sub') and text()='Неверный формат']")
+            .shouldBe(visible, Duration.ofSeconds(5));
     }
-
+    
     public void checkRequiredFieldMessageForField(String fieldLabel) {
-        $x("//span[text()='" + fieldLabel + "']/../span[@class='input__sub' and text()='Поле обязательно для заполнения']")
-                .shouldBe(visible);
+        $x("//span[contains(@class, 'input__inner')][.//span[@class='input__top' and text()='" + fieldLabel + "']]//span[contains(@class, 'input__sub') and text()='Поле обязательно для заполнения']")
+            .shouldBe(visible, Duration.ofSeconds(5));
     }
 
     public void checkNoNotificationsVisible() {

@@ -4,9 +4,7 @@ import com.codeborne.selenide.logevents.SelenideLogger;
 import data.DataHelper;
 import db.DbUtils;
 import io.qameta.allure.selenide.AllureSelenide;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import pages.MainPage;
 
 import static com.codeborne.selenide.Selenide.open;
@@ -14,9 +12,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PaymentTest {
 
+    @BeforeAll
+    static void setupAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
+    }
+
     @BeforeEach
     void setUp() {
-        SelenideLogger.addListener("allure", new AllureSelenide());
         open("http://localhost:8080");
         DbUtils.clearTables();
     }
@@ -46,5 +53,89 @@ public class PaymentTest {
         paymentPage.checkErrorNotification();
         assertEquals("DECLINED", DbUtils.getPaymentStatus());
         assertTrue(DbUtils.isOrderLinkedToPayment()); 
+    }
+
+
+
+    @Test
+    @DisplayName("Пустое поле 'Номер карты' — оплата по карте")
+    void shouldShowValidationErrorsForEmptyCardNumberPayment() {
+        var mainPage = new MainPage();
+        var paymentPage = mainPage.goToPaymentPage();
+        var info = DataHelper.getEmptyCardNumberInfo();
+        paymentPage.fillForm(info);
+
+        paymentPage.checkWrongFormatMessageForField("Номер карты");
+        paymentPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
+    }
+
+    @Test
+    @DisplayName("Пустое поле 'Месяц' — оплата по карте")
+    void shouldShowValidationErrorsForEmptyMonthPayment() {
+        var mainPage = new MainPage();
+        var paymentPage = mainPage.goToPaymentPage();
+        var info = DataHelper.getEmptyMonthInfo();
+        paymentPage.fillForm(info);
+
+        paymentPage.checkWrongFormatMessageForField("Месяц");
+        paymentPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
+    }
+
+    @Test
+    @DisplayName("Пустое поле 'Год' — оплата по карте")
+    void shouldShowValidationErrorsForEmptyYearPayment() {
+        var mainPage = new MainPage();
+        var paymentPage = mainPage.goToPaymentPage();
+        var info = DataHelper.getEmptyYearInfo();
+        paymentPage.fillForm(info);
+
+        paymentPage.checkWrongFormatMessageForField("Год");
+        paymentPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
+    }
+
+    @Test
+    @DisplayName("Пустое поле 'Владелец' — оплата по карте")
+    void shouldShowValidationErrorsForEmptyHolderPayment() {
+        var mainPage = new MainPage();
+        var paymentPage = mainPage.goToPaymentPage();
+        var info = DataHelper.getEmptyHolderInfo();
+        paymentPage.fillForm(info);
+
+        paymentPage.checkRequiredFieldMessageForField("Владелец");
+        paymentPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
+    }
+
+    @Test
+    @DisplayName("Пустое поле 'CVC/CVV' — оплата по карте")
+    void shouldShowValidationErrorsForEmptyCvcPayment() {
+        var mainPage = new MainPage();
+        var paymentPage = mainPage.goToPaymentPage();
+        var info = DataHelper.getEmptyCvcInfo();
+        paymentPage.fillForm(info);
+
+        paymentPage.checkWrongFormatMessageForField("CVC/CVV");
+        paymentPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
+    }
+
+    @Test
+    @DisplayName("Все поля пустые — оплата по карте")
+    void shouldShowValidationErrorsForEmptyFormPayment() {
+        var mainPage = new MainPage();
+        var paymentPage = mainPage.goToPaymentPage();
+        var info = DataHelper.getEmptyFormInfo();
+        paymentPage.fillForm(info);
+
+        paymentPage.checkWrongFormatMessageForField("Номер карты");
+        paymentPage.checkWrongFormatMessageForField("Месяц");
+        paymentPage.checkWrongFormatMessageForField("Год");
+        paymentPage.checkRequiredFieldMessageForField("Владелец");
+        paymentPage.checkWrongFormatMessageForField("CVC/CVV");
+        paymentPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
     }
 }
