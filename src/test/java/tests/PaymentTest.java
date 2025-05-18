@@ -64,12 +64,12 @@ public class PaymentTest {
         var paymentPage = mainPage.goToPaymentPage();
         var info = DataHelper.getEmptyCardNumberInfo();
         paymentPage.fillForm(info);
-
-        paymentPage.checkWrongFormatMessageForField("Номер карты");
+    
+        paymentPage.checkValidationMessageForField("Номер карты", "Неверный формат");
         paymentPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }
-
+    
     @Test
     @DisplayName("Пустое поле 'Месяц' — оплата по карте")
     void shouldShowValidationErrorsForEmptyMonthPayment() {
@@ -77,12 +77,12 @@ public class PaymentTest {
         var paymentPage = mainPage.goToPaymentPage();
         var info = DataHelper.getEmptyMonthInfo();
         paymentPage.fillForm(info);
-
-        paymentPage.checkWrongFormatMessageForField("Месяц");
+    
+        paymentPage.checkValidationMessageForField("Месяц", "Неверный формат");
         paymentPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }
-
+    
     @Test
     @DisplayName("Пустое поле 'Год' — оплата по карте")
     void shouldShowValidationErrorsForEmptyYearPayment() {
@@ -90,12 +90,12 @@ public class PaymentTest {
         var paymentPage = mainPage.goToPaymentPage();
         var info = DataHelper.getEmptyYearInfo();
         paymentPage.fillForm(info);
-
-        paymentPage.checkWrongFormatMessageForField("Год");
+    
+        paymentPage.checkValidationMessageForField("Год", "Неверный формат");
         paymentPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }
-
+    
     @Test
     @DisplayName("Пустое поле 'Владелец' — оплата по карте")
     void shouldShowValidationErrorsForEmptyHolderPayment() {
@@ -103,12 +103,12 @@ public class PaymentTest {
         var paymentPage = mainPage.goToPaymentPage();
         var info = DataHelper.getEmptyHolderInfo();
         paymentPage.fillForm(info);
-
-        paymentPage.checkRequiredFieldMessageForField("Владелец");
+    
+        paymentPage.checkValidationMessageForField("Владелец", "Поле обязательно для заполнения");
         paymentPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }
-
+    
     @Test
     @DisplayName("Пустое поле 'CVC/CVV' — оплата по карте")
     void shouldShowValidationErrorsForEmptyCvcPayment() {
@@ -116,12 +116,12 @@ public class PaymentTest {
         var paymentPage = mainPage.goToPaymentPage();
         var info = DataHelper.getEmptyCvcInfo();
         paymentPage.fillForm(info);
-
-        paymentPage.checkWrongFormatMessageForField("CVC/CVV");
+    
+        paymentPage.checkValidationMessageForField("CVC/CVV", "Неверный формат");
         paymentPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }
-
+    
     @Test
     @DisplayName("Все поля пустые — оплата по карте")
     void shouldShowValidationErrorsForEmptyFormPayment() {
@@ -129,12 +129,12 @@ public class PaymentTest {
         var paymentPage = mainPage.goToPaymentPage();
         var info = DataHelper.getEmptyFormInfo();
         paymentPage.fillForm(info);
-
-        paymentPage.checkWrongFormatMessageForField("Номер карты");
-        paymentPage.checkWrongFormatMessageForField("Месяц");
-        paymentPage.checkWrongFormatMessageForField("Год");
-        paymentPage.checkRequiredFieldMessageForField("Владелец");
-        paymentPage.checkWrongFormatMessageForField("CVC/CVV");
+    
+        paymentPage.checkValidationMessageForField("Номер карты", "Неверный формат");
+        paymentPage.checkValidationMessageForField("Месяц", "Неверный формат");
+        paymentPage.checkValidationMessageForField("Год", "Неверный формат");
+        paymentPage.checkValidationMessageForField("Владелец", "Поле обязательно для заполнения");
+        paymentPage.checkValidationMessageForField("CVC/CVV", "Неверный формат");
         paymentPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }

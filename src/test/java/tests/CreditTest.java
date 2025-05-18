@@ -65,12 +65,12 @@ public class CreditTest {
         var creditPage = mainPage.goToCreditPage();
         var info = DataHelper.getEmptyCardNumberInfo();
         creditPage.fillForm(info);
-
-        creditPage.checkWrongFormatMessageForField("Номер карты");
+    
+        creditPage.checkValidationMessageForField("Номер карты", "Неверный формат");
         creditPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }
-
+    
     @Test
     @DisplayName("Пустое поле 'Месяц' — заявка на кредит")
     void shouldShowValidationErrorsForEmptyMonthCredit() {
@@ -78,12 +78,12 @@ public class CreditTest {
         var creditPage = mainPage.goToCreditPage();
         var info = DataHelper.getEmptyMonthInfo();
         creditPage.fillForm(info);
-
-        creditPage.checkWrongFormatMessageForField("Месяц");
+    
+        creditPage.checkValidationMessageForField("Месяц", "Неверный формат");
         creditPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }
-
+    
     @Test
     @DisplayName("Пустое поле 'Год' — заявка на кредит")
     void shouldShowValidationErrorsForEmptyYearCredit() {
@@ -91,12 +91,12 @@ public class CreditTest {
         var creditPage = mainPage.goToCreditPage();
         var info = DataHelper.getEmptyYearInfo();
         creditPage.fillForm(info);
-
-        creditPage.checkWrongFormatMessageForField("Год");
+    
+        creditPage.checkValidationMessageForField("Год", "Неверный формат");
         creditPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }
-
+    
     @Test
     @DisplayName("Пустое поле 'Владелец' — заявка на кредит")
     void shouldShowValidationErrorsForEmptyHolderCredit() {
@@ -104,12 +104,12 @@ public class CreditTest {
         var creditPage = mainPage.goToCreditPage();
         var info = DataHelper.getEmptyHolderInfo();
         creditPage.fillForm(info);
-
-        creditPage.checkRequiredFieldMessageForField("Владелец");
+    
+        creditPage.checkValidationMessageForField("Владелец", "Поле обязательно для заполнения");
         creditPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }
-
+    
     @Test
     @DisplayName("Пустое поле 'CVC/CVV' — заявка на кредит")
     void shouldShowValidationErrorsForEmptyCvcCredit() {
@@ -117,12 +117,12 @@ public class CreditTest {
         var creditPage = mainPage.goToCreditPage();
         var info = DataHelper.getEmptyCvcInfo();
         creditPage.fillForm(info);
-
-        creditPage.checkWrongFormatMessageForField("CVC/CVV");
+    
+        creditPage.checkValidationMessageForField("CVC/CVV", "Неверный формат");
         creditPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }
-
+    
     @Test
     @DisplayName("Все поля пустые — заявка на кредит")
     void shouldShowValidationErrorsForEmptyFormCredit() {
@@ -130,12 +130,12 @@ public class CreditTest {
         var creditPage = mainPage.goToCreditPage();
         var info = DataHelper.getEmptyFormInfo();
         creditPage.fillForm(info);
-
-        creditPage.checkWrongFormatMessageForField("Номер карты");
-        creditPage.checkWrongFormatMessageForField("Месяц");
-        creditPage.checkWrongFormatMessageForField("Год");
-        creditPage.checkRequiredFieldMessageForField("Владелец");
-        creditPage.checkWrongFormatMessageForField("CVC/CVV");
+    
+        creditPage.checkValidationMessageForField("Номер карты", "Неверный формат");
+        creditPage.checkValidationMessageForField("Месяц", "Неверный формат");
+        creditPage.checkValidationMessageForField("Год", "Неверный формат");
+        creditPage.checkValidationMessageForField("Владелец", "Поле обязательно для заполнения");
+        creditPage.checkValidationMessageForField("CVC/CVV", "Неверный формат");
         creditPage.checkNoNotificationsVisible();
         assertEquals(0, DbUtils.getOrderCount());
     }

@@ -45,14 +45,9 @@ public class CreditPage {
         errorText.shouldHave(text("Ошибка! Банк отказал в проведении операции."), Duration.ofSeconds(25));
     }
 
-    public void checkWrongFormatMessageForField(String fieldLabel) {
-        $x("//span[contains(@class, 'input__inner')][.//span[@class='input__top' and text()='" + fieldLabel + "']]//span[contains(@class, 'input__sub') and text()='Неверный формат']")
-            .shouldBe(visible, Duration.ofSeconds(5));
-    }
-    
-    public void checkRequiredFieldMessageForField(String fieldLabel) {
-        $x("//span[contains(@class, 'input__inner')][.//span[@class='input__top' and text()='" + fieldLabel + "']]//span[contains(@class, 'input__sub') and text()='Поле обязательно для заполнения']")
-            .shouldBe(visible, Duration.ofSeconds(5));
+    public void checkValidationMessageForField(String fieldLabel, String expectedMessage) {
+        $x("//span[contains(@class, 'input__inner')][.//span[@class='input__top' and text()='" + fieldLabel + "']]//span[contains(@class, 'input__sub') and text()='" + expectedMessage + "']")
+            .shouldBe(visible, Duration.ofSeconds(10));
     }
 
     public void checkNoNotificationsVisible() {

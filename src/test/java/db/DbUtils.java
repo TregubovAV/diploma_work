@@ -50,9 +50,10 @@ public class DbUtils {
     public static int getOrderCount() {
         QueryRunner runner = new QueryRunner();
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            return runner.query(conn,
+            Long count = runner.query(conn,
                 "SELECT COUNT(*) FROM order_entity;",
                 new ScalarHandler<>());
+            return count != null ? count.intValue() : 0;
         }
     }
 
