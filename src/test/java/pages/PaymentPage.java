@@ -47,7 +47,7 @@ public class PaymentPage {
 
     public void checkValidationMessageForField(String fieldLabel, String expectedMessage) {
         $x("//span[contains(@class, 'input__inner')][.//span[@class='input__top' and text()='" + fieldLabel + "']]//span[contains(@class, 'input__sub') and text()='" + expectedMessage + "']")
-            .shouldBe(visible, Duration.ofSeconds(10));
+            .shouldBe(visible, Duration.ofSeconds(3));
     }
 
     public void checkNoNotificationsVisible() {
