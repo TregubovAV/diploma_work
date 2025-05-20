@@ -307,18 +307,16 @@ public class PaymentTest {
     }
 
     @Test
-    @DisplayName("CVC = 000 — граничное значение — оплата по карте")
-    void shouldApprovePaymentWithEdgeCvc() {
+    @DisplayName("CVC = 000 — невалидный код — оплата по карте")
+    void shouldShowValidationMessageForZeroCvcPayment() {
         var mainPage = new MainPage();
         var paymentPage = mainPage.goToPaymentPage();
         var info = DataHelper.getEdgeCVC(); // CVC = "000"
         paymentPage.fillForm(info);
-        paymentPage.checkSuccessNotification();
 
-        var status = DbUtils.getPaymentStatus();
-        assertNotNull(status, "❌ Запись в payment_entity не найдена");
-        assertEquals("APPROVED", status);
-        assertTrue(DbUtils.isOrderLinkedToPayment(), "❌ Нет связи с order_entity");
+        paymentPage.checkValidationMessageForField("CVC/CVV", "Неверный формат");
+        paymentPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
     }
 
 }

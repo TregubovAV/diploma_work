@@ -313,18 +313,16 @@ public class CreditTest {
     }
 
     @Test
-    @DisplayName("CVC = 000 — граничное значение — заявка на кредит")
-    void shouldApproveCreditWithEdgeCvc() {
+    @DisplayName("CVC = 000 — невалидный код — заявка на кредит")
+    void shouldShowValidationMessageForZeroCvcCredit() {
         var mainPage = new MainPage();
         var creditPage = mainPage.goToCreditPage();
         var info = DataHelper.getEdgeCVC(); // CVC = "000"
         creditPage.fillForm(info);
-        creditPage.checkSuccessNotification();
 
-        var status = DbUtils.getCreditStatus();
-        assertNotNull(status, "❌ Запись в credit_request_entity не найдена");
-        assertEquals("APPROVED", status);
-        assertTrue(DbUtils.isOrderLinkedToCredit(), "❌ Нет связи с order_entity");
+        creditPage.checkValidationMessageForField("CVC/CVV", "Неверный формат");
+        creditPage.checkNoNotificationsVisible();
+        assertEquals(0, DbUtils.getOrderCount());
     }
     
 }
